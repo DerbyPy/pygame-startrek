@@ -29,7 +29,7 @@ def load_image(name, colorkey=None):
 
 
 class TheGame:
-    DISPLAY_SIZE = (700, 500)
+    DISPLAY_SIZE = (1200, 700)
 
     def __init__(self):
         self.screen = None
@@ -37,12 +37,19 @@ class TheGame:
 
         pygame.init()
 
-        # Initialize the screen
-        self.screen = pygame.display.set_mode(self.DISPLAY_SIZE)
-        self.bg_image, _ = load_image('background.jpg')
+    def init_display(self, display_width, display_height):
+        mode = pygame.RESIZABLE
+        size = (display_width, display_height)
+        self.screen = pygame.display.set_mode(size, mode)
+
+        self.bg_image, _ = load_image('background2.jpg')
+
+        # Apply the background
         self.screen.blit(self.bg_image, (0, 0))
 
     def run(self):
+        # initial display setup
+        self.init_display(*self.DISPLAY_SIZE)
         pygame.display.set_caption('STAR TREK WARS I')
         pygame.display.update()
 
@@ -63,6 +70,8 @@ class TheGame:
                     return
                 elif event.type == const.KEYDOWN and event.key == const.K_ESCAPE:
                     return
+                elif event.type == pygame.VIDEORESIZE:
+                    self.init_display(event.w, event.h)
 
             pygame.display.update()
 
