@@ -67,16 +67,18 @@ class TheGame:
         pygame.quit()
 
     def handle_events(self):
-        full_screen_update = False
-
         clock = pygame.time.Clock()
-
         enterprise = Enterprise()
         allsprites = pygame.sprite.RenderUpdates((enterprise,))
 
         while True:
+            full_screen_update = False
+
             # limit loop to 60 frames per second
             clock.tick(60)
+
+            # clear previous draws to avoid trailing effect
+            allsprites.clear(self.screen, self.bg_image)
 
             # Handle Input Events
             for event in pygame.event.get():
