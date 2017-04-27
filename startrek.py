@@ -68,6 +68,32 @@ class Warbird(pygame.sprite.Sprite):
         self.rect = newpos
 
 
+class Score(pygame.sprite.Sprite):
+
+    def __init__(self, xy):
+        pygame.sprite.Sprite.__init__(self)
+        self.xy = xy
+        self.font = pygame.font.Font(None, 50)
+        # Our font color in rgb
+        self.color = (255, 165, 0)
+        self.score = 0  # start at zero
+        self.render()
+
+    def update(self):
+        pass
+
+    def add(self, points):
+        """Adds the given number of points to the score."""
+        self.score += points
+        self.render()
+
+    def render(self):
+        """Updates the score. Renders a new image and re-centers at the initial coordinates."""
+        self.image = self.font.render("Score: {}".format(self.score), True, self.color)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.xy
+
+
 class TheGame:
     DISPLAY_SIZE = (1200, 700)
 
@@ -101,7 +127,8 @@ class TheGame:
         clock = pygame.time.Clock()
         enterprise = Enterprise()
         warbird = Warbird()
-        allsprites = pygame.sprite.RenderUpdates((enterprise, warbird))
+        score = Score((0, 0))
+        allsprites = pygame.sprite.RenderUpdates((enterprise, warbird, score))
         torpedo_list = pygame.sprite.Group()
 
         while True:
@@ -136,6 +163,7 @@ class TheGame:
             for torpedo in pygame.sprite.spritecollide(warbird, torpedo_list, True):
                 torpedo_list.remove(torpedo)
                 allsprites.remove(torpedo)
+                score.add(1)
 
             if full_screen_update:
                 pygame.display.update()
