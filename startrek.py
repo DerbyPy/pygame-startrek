@@ -132,6 +132,11 @@ class TheGame:
 
             allsprites.update()
 
+            # Collision mechanics for torpedos & warbird
+            for torpedo in pygame.sprite.spritecollide(warbird, torpedo_list, True):
+                torpedo_list.remove(torpedo)
+                allsprites.remove(torpedo)
+
             if full_screen_update:
                 pygame.display.update()
             else:
