@@ -27,6 +27,7 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey, const.RLEACCEL)
     return image, image.get_rect()
 
+
 class Enterprise(pygame.sprite.Sprite):
     def __init__(self):
         super(). __init__()
@@ -35,6 +36,16 @@ class Enterprise(pygame.sprite.Sprite):
     def update(self):
         pos = pygame.mouse.get_pos()
         self.rect.midtop = pos
+
+
+class Torpedo(pygame.sprite.Sprite):
+    def __init__(self):
+        super(). __init__()
+        self.image, self.rect = load_image("federation_torpedo.png", BLACK)
+        self.speed = 10
+
+    def update(self):
+        self.rect.x += self.speed
 
 
 class TheGame:
@@ -70,6 +81,7 @@ class TheGame:
         clock = pygame.time.Clock()
         enterprise = Enterprise()
         allsprites = pygame.sprite.RenderUpdates((enterprise,))
+        torpedo_list = pygame.sprite.Group()
 
         while True:
             full_screen_update = False
@@ -89,6 +101,13 @@ class TheGame:
                 elif event.type == pygame.VIDEORESIZE:
                     self.init_display(event.w, event.h)
                     full_screen_update = True
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    torpedo = Torpedo()
+                    # Set the torpedo so it is where the player is
+                    torpedo.rect.center = enterprise.rect.center
+                    # Add the torpedo to the lists
+                    allsprites.add(torpedo)
+                    torpedo_list.add(torpedo)
 
             allsprites.update()
 
