@@ -48,6 +48,26 @@ class Torpedo(pygame.sprite.Sprite):
         self.rect.x += self.speed
 
 
+class Warbird(pygame.sprite.Sprite):
+    def __init__(self):
+        super(). __init__()
+        self.image, self.rect = load_image("ship_warbird.png", WHITE)
+
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.rect.right = self.area.right
+        self.rect.top = 10
+        self.move_y = 4
+
+    def update(self):
+        newpos = self.rect.move((0, self.move_y))
+        if newpos.bottom > self.area.bottom or \
+                newpos.top < self.area.top:
+            self.move_y = -self.move_y
+            newpos = self.rect.move((0, self.move_y))
+        self.rect = newpos
+
+
 class TheGame:
     DISPLAY_SIZE = (1200, 700)
 
@@ -80,7 +100,8 @@ class TheGame:
     def handle_events(self):
         clock = pygame.time.Clock()
         enterprise = Enterprise()
-        allsprites = pygame.sprite.RenderUpdates((enterprise,))
+        warbird = Warbird()
+        allsprites = pygame.sprite.RenderUpdates((enterprise, warbird))
         torpedo_list = pygame.sprite.Group()
 
         while True:
