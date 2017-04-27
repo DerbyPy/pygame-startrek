@@ -27,6 +27,15 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey, const.RLEACCEL)
     return image, image.get_rect()
 
+class Enterprise(pygame.sprite.Sprite):
+    def __init__(self):
+        super(). __init__()
+        self.image, self.rect = load_image("ship_enterprise.png", WHITE)
+
+    def update(self):
+        pos = pygame.mouse.get_pos()
+        self.rect.midtop = pos
+
 
 class TheGame:
     DISPLAY_SIZE = (1200, 700)
@@ -58,7 +67,12 @@ class TheGame:
         pygame.quit()
 
     def handle_events(self):
+        full_screen_update = False
+
         clock = pygame.time.Clock()
+
+        enterprise = Enterprise()
+        allsprites = pygame.sprite.RenderUpdates((enterprise,))
 
         while True:
             # limit loop to 60 frames per second
@@ -72,8 +86,15 @@ class TheGame:
                     return
                 elif event.type == pygame.VIDEORESIZE:
                     self.init_display(event.w, event.h)
+                    full_screen_update = True
 
-            pygame.display.update()
+            allsprites.update()
+
+            if full_screen_update:
+                pygame.display.update()
+            else:
+                changes = allsprites.draw(self.screen)
+                pygame.display.update(changes)
 
 
 if __name__ == '__main__':
